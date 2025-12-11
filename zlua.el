@@ -235,9 +235,12 @@ Shows a list of all matching directories and allows selection."
 Searches for files matching FILENAME-PATTERN across all directories
 in the z.lua database and allows selection if multiple matches are found.
 FILENAME-PATTERN is matched as a substring in the filename.
-Uses cached directory list for better performance."
+
+Uses cached directory list for better performance.  The cache expires
+after `zlua-cache-timeout' seconds (default 60).  Use `zlua-clear-cache'
+to manually invalidate the cache."
   (interactive "szlua search file: ")
-  (let* ((all-dirs (zlua--get-all-dirs))  ; Use cached directories
+  (let* ((all-dirs (zlua--get-all-dirs))  ; Get directories (cached for zlua-cache-timeout seconds)
          (matching-files nil))
     (if (not all-dirs)
         (message "zlua: no tracked directories found")
