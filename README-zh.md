@@ -228,7 +228,7 @@ M-x zlua-search-file RET .el RET      ; 查找所有 .el 文件
 
 ## 许可证
 
-MIT License - 详见 LICENSE 文件。
+GNU GENERAL PUBLIC LICENSE Version 3 - 详见 LICENSE 文件。
 
 ## 致谢
 

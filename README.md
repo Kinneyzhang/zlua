@@ -219,7 +219,7 @@ M-x zlua-search-file RET .el RET      ; Find all .el files
 
 ## License
 
-MIT License - See LICENSE file for details.
+GNU GENERAL PUBLIC LICENSE Version 3 - See LICENSE file for details.
 
 ## Acknowledgments
 
