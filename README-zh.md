@@ -15,37 +15,25 @@
 - ⚙️ **易于配置**: 简单的配置选项
 
 ## 依赖
-
-1. **z.lua 脚本**: 从 [skywind3000/z.lua](https://github.com/skywind3000/z.lua) 下载 z.lua 脚本
-2. **Lua 解释器**: 需要安装 lua, luajit, 或 lua 5.1/5.2/5.3
-3. **Emacs**: 版本 24.4 或更高
+1. **Lua 解释器**: 需要安装 lua, luajit, 或 lua 5.1/5.2/5.3
+2. **Emacs**: 版本 24.4 或更高
 
 ## 安装
 
 ### 手动安装
 
-1. 下载 z.lua 脚本：
-
-```bash
-# 克隆 z.lua 仓库
-git clone https://github.com/skywind3000/z.lua.git ~/z.lua
-```
-
-2. 下载 zlua.el 到你的 Emacs load-path：
+1. 下载 zlua.el 到你的 Emacs load-path：
 
 ```bash
 # 克隆本仓库
 git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```
 
-3. 在你的 Emacs 配置文件中添加：
+2. 在你的 Emacs 配置文件中添加：
 
 ```elisp
 (add-to-list 'load-path "~/.emacs.d/site-lisp/zlua")
 (require 'zlua)
-
-;; 设置 z.lua 脚本的路径
-(setq zlua-script (expand-file-name "~/z.lua/z.lua"))
 
 ;; 可选：设置 lua 可执行文件的路径（如果不在 PATH 中）
 ;; (setq zlua-executable "/usr/bin/lua")
@@ -59,8 +47,6 @@ git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```elisp
 (use-package zlua
   :load-path "~/.emacs.d/site-lisp/zlua"
-  :custom
-  (zlua-script (expand-file-name "~/z.lua/z.lua"))
   :config
   (zlua-mode 1))
 ```
@@ -70,8 +56,6 @@ git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```elisp
 (use-package zlua
   :straight (:host github :repo "Kinneyzhang/zlua")
-  :custom
-  (zlua-script (expand-file-name "~/z.lua/z.lua"))
   :config
   (zlua-mode 1))
 ```
@@ -144,14 +128,6 @@ M-x zlua-clear-cache RET           ; 清除缓存
 
 ## 配置选项
 
-### `zlua-script`
-
-z.lua 脚本的绝对路径（必须设置）。
-
-```elisp
-(setq zlua-script (expand-file-name "~/z.lua/z.lua"))
-```
-
 ### `zlua-executable`
 
 Lua 可执行文件的路径。如果为 nil，会自动在 PATH 中查找。
@@ -213,14 +189,6 @@ eval "$(lua ~/z.lua/z.lua --init zsh)"    # 对于 zsh
 ```bash
 # 检查 lua 是否可用
 which lua
-```
-
-### "z.lua script not found"
-
-确保 `zlua-script` 指向正确的 z.lua 脚本路径：
-
-```elisp
-(setq zlua-script (expand-file-name "~/z.lua/z.lua"))
 ```
 
 ### 没有匹配结果

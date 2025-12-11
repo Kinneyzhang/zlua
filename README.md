@@ -15,37 +15,25 @@
 - ⚙️ **Easy Configuration**: Simple configuration options
 
 ## Requirements
-
-1. **z.lua Script**: Download z.lua from [skywind3000/z.lua](https://github.com/skywind3000/z.lua)
-2. **Lua Interpreter**: lua, luajit, or lua 5.1/5.2/5.3 must be installed
-3. **Emacs**: Version 24.4 or higher
+1. **Lua Interpreter**: lua, luajit, or lua 5.1/5.2/5.3 must be installed
+2. **Emacs**: Version 24.4 or higher
 
 ## Installation
 
 ### Manual Installation
 
-1. Download the z.lua script:
-
-```bash
-# Clone the z.lua repository
-git clone https://github.com/skywind3000/z.lua.git ~/z.lua
-```
-
-2. Download zlua.el to your Emacs load-path:
+1. Download zlua.el to your Emacs load-path:
 
 ```bash
 # Clone this repository
 git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```
 
-3. Add to your Emacs configuration:
+2. Add to your Emacs configuration:
 
 ```elisp
 (add-to-list 'load-path "~/.emacs.d/site-lisp/zlua")
 (require 'zlua)
-
-;; Set the path to z.lua script
-(setq zlua-script (expand-file-name "~/z.lua/z.lua"))
 
 ;; Optional: Set the lua executable path (if not in PATH)
 ;; (setq zlua-executable "/usr/bin/lua")
@@ -59,8 +47,6 @@ git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```elisp
 (use-package zlua
   :load-path "~/.emacs.d/site-lisp/zlua"
-  :custom
-  (zlua-script (expand-file-name "~/z.lua/z.lua"))
   :config
   (zlua-mode 1))
 ```
@@ -70,8 +56,6 @@ git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```elisp
 (use-package zlua
   :straight (:host github :repo "Kinneyzhang/zlua")
-  :custom
-  (zlua-script (expand-file-name "~/z.lua/z.lua"))
   :config
   (zlua-mode 1))
 ```
@@ -133,24 +117,7 @@ Clear the directory cache to force refresh of the tracked directories list:
 M-x zlua-clear-cache RET           ; Clear cache
 ```
 
-### Suggested Keybindings
-
-```elisp
-(global-set-key (kbd "C-c z") 'zlua-jump)
-(global-set-key (kbd "C-c Z") 'zlua-jump-interactive)
-(global-set-key (kbd "C-c f z") 'zlua-search-dir)
-(global-set-key (kbd "C-c f n") 'zlua-search-file)
-```
-
 ## Configuration Options
-
-### `zlua-script`
-
-Absolute path to z.lua script (required).
-
-```elisp
-(setq zlua-script (expand-file-name "~/z.lua/z.lua"))
-```
 
 ### `zlua-executable`
 
@@ -213,14 +180,6 @@ Ensure lua is installed and in PATH, or set `zlua-executable`:
 ```bash
 # Check if lua is available
 which lua
-```
-
-### "z.lua script not found"
-
-Ensure `zlua-script` points to the correct z.lua script path:
-
-```elisp
-(setq zlua-script (expand-file-name "~/z.lua/z.lua"))
 ```
 
 ### No matching results
