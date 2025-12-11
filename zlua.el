@@ -245,14 +245,20 @@ to manually invalidate the cache."
     (if (not all-dirs)
         (message "zlua: no tracked directories found")
       ;; Search for matching files in each directory
+      ;; Use directory-files-and-attributes for better performance
+      ;; (avoids separate file-regular-p call for each file)
       (dolist (dir all-dirs)
         (condition-case nil
-            (let ((files (directory-files dir t)))
-              (dolist (file files)
-                (when (and (file-regular-p file)
-                           (string-match-p (regexp-quote filename-pattern)
-                                           (file-name-nondirectory file)))
-                  (push file matching-files))))
+            (let ((files-with-attrs (directory-files-and-attributes dir t nil t)))
+              (dolist (file-entry files-with-attrs)
+                (let* ((file (car file-entry))
+                       (attrs (cdr file-entry))
+                       (file-type (file-attribute-type attrs)))
+                  ;; file-type is nil for regular file, t for directory, string for symlink
+                  (when (and (null file-type)
+                             (string-match-p (regexp-quote filename-pattern)
+                                             (file-name-nondirectory file)))
+                    (push file matching-files)))))
           (error nil)))  ; Ignore errors from inaccessible directories
       
       (cond
