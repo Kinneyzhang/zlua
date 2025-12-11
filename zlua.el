@@ -42,7 +42,10 @@ If nil, will search for lua, luajit, lua5.3, lua5.2, or lua5.1 in PATH."
                  (file :tag "Path to lua"))
   :group 'zlua)
 
-(defcustom zlua-script nil
+(defconst zlua-directory
+  (file-name-directory (or load-file-name buffer-file-name)))
+
+(defcustom zlua-script (expand-file-name "z.lua" zlua-directory)
   "Path to z.lua script.
 This must be set to the absolute path of z.lua script."
   :type '(choice (const :tag "Not set" nil)
