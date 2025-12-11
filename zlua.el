@@ -106,7 +106,7 @@ Returns nil if there's an error."
 If LIST-ALL is non-nil, return all matches with scores.
 Otherwise return the best match."
   (let* ((args (if list-all
-                   (list "--list" pattern)
+                   (list "-l" pattern)
                  (list "--cd" pattern)))
          (output (zlua--call-zlua args)))
     (when (and output (not (string-empty-p output)))
