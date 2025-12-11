@@ -183,6 +183,53 @@ Shows a list of all matching directories and allows selection."
           (call-interactively #'find-file))
       (message "zlua: no matching directory found for '%s'" pattern))))
 
+;;;###autoload
+(defun zlua-find-file-by-name (filename-pattern)
+  "Find and open a file by FILENAME-PATTERN in z.lua tracked directories.
+Searches for files matching FILENAME-PATTERN across all directories
+in the z.lua database and allows selection if multiple matches are found.
+FILENAME-PATTERN is matched as a substring in the filename."
+  (interactive "szlua find file by name: ")
+  (let* ((all-dirs (zlua--get-matches "." t))  ; Get all tracked directories
+         (matching-files nil))
+    (if (not all-dirs)
+        (message "zlua: no tracked directories found")
+      ;; Extract directory paths from "score path" format
+      (dolist (line all-dirs)
+        (when (string-match "^[0-9.,]+\\s-+\\(.+\\)$" line)
+          (let ((dir (match-string 1 line)))
+            (when (file-directory-p dir)
+              ;; Search for matching files in this directory
+              (condition-case nil
+                  (let ((files (directory-files dir t)))
+                    (dolist (file files)
+                      (when (and (file-regular-p file)
+                                 (string-match-p (regexp-quote filename-pattern)
+                                                (file-name-nondirectory file)))
+                        (push file matching-files))))
+                (error nil))))))  ; Ignore errors from inaccessible directories
+      
+      (cond
+       ((null matching-files)
+        (message "zlua: no files matching '%s' found in tracked directories" filename-pattern))
+       ((= 1 (length matching-files))
+        (find-file (car matching-files))
+        (message "zlua: opened %s" (car matching-files)))
+       (t
+        ;; Multiple matches, let user choose
+        ;; Create display strings with directory context
+        (let* ((file-alist (mapcar (lambda (f)
+                                     (cons (format "%s (%s)"
+                                                   (file-name-nondirectory f)
+                                                   (abbreviate-file-name (file-name-directory f)))
+                                           f))
+                                   matching-files))
+               (choice (completing-read "Select file: " file-alist nil t))
+               (selected-file (cdr (assoc choice file-alist))))
+          (when selected-file
+            (find-file selected-file)
+            (message "zlua: opened %s" selected-file))))))))
+
 (defun zlua--dired-add-path ()
   "Add current dired directory to z.lua database."
   (when (and zlua-enable-auto-track

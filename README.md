@@ -113,12 +113,28 @@ M-x zlua-list RET foo RET          ; 在新 buffer 中显示匹配结果
 M-x zlua-find-file RET foo RET     ; 跳转到匹配 foo 的目录并打开文件选择
 ```
 
+#### `zlua-find-file-by-name`
+
+根据文件名在所有跟踪的目录中搜索并打开文件：
+
+Search and open files by name across all tracked directories:
+
+```elisp
+M-x zlua-find-file-by-name RET readme RET    ; 查找所有包含 'readme' 的文件
+M-x zlua-find-file-by-name RET .txt RET      ; 查找所有 .txt 文件
+```
+
+如果找到多个匹配的文件，会显示选择列表（包含文件名和所在目录）。
+
+If multiple matches are found, an interactive selection list will be displayed (showing filename and directory).
+
 ### 键绑定建议 / Suggested Keybindings
 
 ```elisp
 (global-set-key (kbd "C-c z") 'zlua-jump)
 (global-set-key (kbd "C-c Z") 'zlua-jump-interactive)
 (global-set-key (kbd "C-c f z") 'zlua-find-file)
+(global-set-key (kbd "C-c f n") 'zlua-find-file-by-name)
 ```
 
 ## 配置选项 / Configuration Options
@@ -212,6 +228,10 @@ M-x zlua-jump-interactive RET doc RET ; 显示所有包含 "doc" 的目录
 
 ;; 4. 在匹配的目录中打开文件
 M-x zlua-find-file RET proj RET       ; 在 ~/projects/my-project 中选择文件
+
+;; 5. 根据文件名直接搜索并打开文件
+M-x zlua-find-file-by-name RET config RET  ; 在所有跟踪目录中查找包含 "config" 的文件
+M-x zlua-find-file-by-name RET .el RET     ; 查找所有 .el 文件
 ```
 
 ## 相关项目 / Related Projects
