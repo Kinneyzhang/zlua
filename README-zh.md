@@ -106,21 +106,21 @@ C-u M-x zlua-jump RET foo RET          ; 与 prefix argument 效果相同
 M-x zlua-list RET foo RET          ; 在新 buffer 中显示匹配结果
 ```
 
-#### `zlua-find-file`
+#### `zlua-search-dir`
 
 在匹配的目录中查找并打开文件：
 
 ```elisp
-M-x zlua-find-file RET foo RET     ; 跳转到匹配 foo 的目录并打开文件选择
+M-x zlua-search-dir RET foo RET    ; 跳转到匹配 foo 的目录并打开文件选择
 ```
 
-#### `zlua-find-file-by-name`
+#### `zlua-search-file`
 
 根据文件名在所有跟踪的目录中搜索并打开文件：
 
 ```elisp
-M-x zlua-find-file-by-name RET readme RET    ; 查找所有包含 'readme' 的文件
-M-x zlua-find-file-by-name RET .txt RET      ; 查找所有 .txt 文件
+M-x zlua-search-file RET readme RET    ; 查找所有包含 'readme' 的文件
+M-x zlua-search-file RET .txt RET      ; 查找所有 .txt 文件
 ```
 
 如果找到多个匹配的文件，会显示选择列表（包含文件名和所在目录）。
@@ -138,8 +138,8 @@ M-x zlua-clear-cache RET           ; 清除缓存
 ```elisp
 (global-set-key (kbd "C-c z") 'zlua-jump)
 (global-set-key (kbd "C-c Z") 'zlua-jump-interactive)
-(global-set-key (kbd "C-c f z") 'zlua-find-file)
-(global-set-key (kbd "C-c f n") 'zlua-find-file-by-name)
+(global-set-key (kbd "C-c f z") 'zlua-search-dir)
+(global-set-key (kbd "C-c f n") 'zlua-search-file)
 ```
 
 ## 配置选项
@@ -170,10 +170,11 @@ Lua 可执行文件的路径。如果为 nil，会自动在 PATH 中查找。
 
 ### `zlua-cache-timeout`
 
-目录缓存过期时间（秒）。默认为 60 秒。设置为 0 可禁用缓存。
+目录缓存过期时间（秒）。默认为 100000 秒。设置为 0 可禁用缓存。
 
 ```elisp
-(setq zlua-cache-timeout 60)     ; 缓存60秒
+(setq zlua-cache-timeout 100000) ; 缓存 100000 秒（默认）
+(setq zlua-cache-timeout 60)     ; 缓存 60 秒
 (setq zlua-cache-timeout 0)      ; 禁用缓存
 ```
 
@@ -243,11 +244,11 @@ M-x z RET down RET                    ; 跳转到 ~/downloads
 M-x zlua-jump-interactive RET doc RET ; 显示所有包含 "doc" 的目录
 
 ;; 4. 在匹配的目录中打开文件
-M-x zlua-find-file RET proj RET       ; 在 ~/projects/my-project 中选择文件
+M-x zlua-search-dir RET proj RET      ; 在 ~/projects/my-project 中选择文件
 
 ;; 5. 根据文件名直接搜索并打开文件
-M-x zlua-find-file-by-name RET config RET  ; 在所有跟踪目录中查找包含 "config" 的文件
-M-x zlua-find-file-by-name RET .el RET     ; 查找所有 .el 文件
+M-x zlua-search-file RET config RET   ; 在所有跟踪目录中查找包含 "config" 的文件
+M-x zlua-search-file RET .el RET      ; 查找所有 .el 文件
 ```
 
 ## 相关项目

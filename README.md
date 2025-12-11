@@ -106,21 +106,21 @@ List all matching directories with their scores:
 M-x zlua-list RET foo RET          ; Display matches in a new buffer
 ```
 
-#### `zlua-find-file`
+#### `zlua-search-dir`
 
 Find and open a file in a matching directory:
 
 ```elisp
-M-x zlua-find-file RET foo RET     ; Jump to directory matching "foo" and open file selection
+M-x zlua-search-dir RET foo RET    ; Jump to directory matching "foo" and open file selection
 ```
 
-#### `zlua-find-file-by-name`
+#### `zlua-search-file`
 
 Search and open files by name across all tracked directories:
 
 ```elisp
-M-x zlua-find-file-by-name RET readme RET    ; Find all files containing 'readme'
-M-x zlua-find-file-by-name RET .txt RET      ; Find all .txt files
+M-x zlua-search-file RET readme RET    ; Find all files containing 'readme'
+M-x zlua-search-file RET .txt RET      ; Find all .txt files
 ```
 
 If multiple matches are found, an interactive selection list will be displayed (showing filename and directory).
@@ -138,8 +138,8 @@ M-x zlua-clear-cache RET           ; Clear cache
 ```elisp
 (global-set-key (kbd "C-c z") 'zlua-jump)
 (global-set-key (kbd "C-c Z") 'zlua-jump-interactive)
-(global-set-key (kbd "C-c f z") 'zlua-find-file)
-(global-set-key (kbd "C-c f n") 'zlua-find-file-by-name)
+(global-set-key (kbd "C-c f z") 'zlua-search-dir)
+(global-set-key (kbd "C-c f n") 'zlua-search-file)
 ```
 
 ## Configuration Options
@@ -170,9 +170,10 @@ Whether to automatically track directory visits in dired-mode. Default is `t`.
 
 ### `zlua-cache-timeout`
 
-Directory cache expiration time in seconds. Default is 60 seconds. Set to 0 to disable caching.
+Directory cache expiration time in seconds. Default is 100000 seconds. Set to 0 to disable caching.
 
 ```elisp
+(setq zlua-cache-timeout 100000) ; Cache for 100000 seconds (default)
 (setq zlua-cache-timeout 60)     ; Cache for 60 seconds
 (setq zlua-cache-timeout 0)      ; Disable caching
 ```
@@ -243,11 +244,11 @@ M-x z RET down RET                    ; Jump to ~/downloads
 M-x zlua-jump-interactive RET doc RET ; Show all directories containing "doc"
 
 ;; 4. Open files in matching directories
-M-x zlua-find-file RET proj RET       ; Select file in ~/projects/my-project
+M-x zlua-search-dir RET proj RET      ; Select file in ~/projects/my-project
 
 ;; 5. Search and open files by name directly
-M-x zlua-find-file-by-name RET config RET  ; Find files containing "config" in all tracked directories
-M-x zlua-find-file-by-name RET .el RET     ; Find all .el files
+M-x zlua-search-file RET config RET   ; Find files containing "config" in all tracked directories
+M-x zlua-search-file RET .el RET      ; Find all .el files
 ```
 
 ## Related Projects
