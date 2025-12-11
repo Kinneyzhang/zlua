@@ -93,14 +93,17 @@ Returns nil if there's an error."
             nil))))))
 
 (defun zlua--add-path (path)
-  "Add PATH to z.lua database."
+  "Add PATH to z.lua database.
+Normalizes PATH by removing trailing slashes to avoid duplicate entries."
   (when (and (zlua--check-configuration)
              (file-directory-p path))
     (let ((lua-exe (zlua--find-lua-executable))
-          (random-val (random 2147483647)))
+          (random-val (random 2147483647))
+          ;; Normalize path by removing trailing slashes
+          (normalized-path (directory-file-name (expand-file-name path))))
       (setenv "_ZL_RANDOM" (number-to-string random-val))
       (call-process lua-exe nil 0 nil
-                    zlua-script "--add" (expand-file-name path)))))
+                    zlua-script "--add" normalized-path))))
 
 (defun zlua--get-matches (pattern &optional list-all)
   "Get directories matching PATTERN.
