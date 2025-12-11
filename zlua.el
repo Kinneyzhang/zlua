@@ -28,6 +28,7 @@
 ;;; Code:
 
 (require 'dired)
+(require 'cl-lib)
 
 (defgroup zlua nil
   "Emacs integration for z.lua directory jumping."
@@ -140,13 +141,13 @@ Shows a list of all matching directories and allows selection."
          (paths (when matches
                   (mapcar (lambda (line)
                             ;; Parse output: "score path"
-                            (if (string-match "^[0-9.]+\\s-+\\(.+\\)$" line)
-                                (cons (match-string 1 line) line)
+                            (if (string-match "^[0-9.,]+\\s-+\\(.+\\)$" line)
+                                (cons line (match-string 1 line))
                               (cons line line)))
                           matches))))
     (if paths
         (let* ((choice (completing-read "Select directory: " paths nil t))
-               (path (car (rassoc choice paths))))
+               (path (cdr (assoc choice paths))))
           (when (and path (file-directory-p path))
             (dired path)
             (message "zlua: jumped to %s" path)))
