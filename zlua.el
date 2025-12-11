@@ -67,7 +67,7 @@ When non-nil, visiting directories in dired will update z.lua database."
 (defvar zlua--dirs-cache-time nil
   "Time when the directories cache was last updated.")
 
-(defcustom zlua-cache-timeout 60
+(defcustom zlua-cache-timeout 100000
   "Number of seconds before the directories cache expires.
 Set to 0 to disable caching."
   :type 'integer
