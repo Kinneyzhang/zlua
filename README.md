@@ -1,59 +1,60 @@
 # zlua.el - Emacs Integration for z.lua
 
-[z.lua](https://github.com/skywind3000/z.lua) 是一个快速路径切换工具，类似于 z.sh / autojump / fasd，但性能更好、功能更强。本项目为 Emacs 提供 z.lua 集成，让你可以在 Emacs 中快速跳转到常用目录。
-
 [z.lua](https://github.com/skywind3000/z.lua) is a fast directory jumping tool (similar to z.sh / autojump / fasd) with better performance and more features. This project provides Emacs integration for z.lua, allowing you to quickly jump to frequently used directories in Emacs.
 
-## 功能特性 / Features
+[中文文档](README-zh.md)
 
-- 🚀 **快速跳转**: 使用模糊匹配快速跳转到常用目录
-- 📊 **智能学习**: 基于访问频率和时间自动学习你的习惯
-- 🎯 **交互式选择**: 多个匹配结果时可以交互式选择
-- 📁 **Dired 集成**: 自动跟踪 dired 中访问的目录
-- 🔍 **查找文件**: 在匹配的目录中打开文件
-- ⚙️ **易于配置**: 简单的配置选项
+## Features
 
-## 依赖 / Requirements
+- 🚀 **Fast Jump**: Quickly jump to frequently used directories using fuzzy matching
+- 📊 **Smart Learning**: Automatically learns your habits based on visit frequency and recency
+- 🎯 **Interactive Selection**: Interactively select when multiple matches are found
+- 📁 **Dired Integration**: Automatically track directories visited in dired
+- 🔍 **File Search**: Open files in matching directories
+- ⚡ **Caching Support**: Caching for faster file searches
+- ⚙️ **Easy Configuration**: Simple configuration options
 
-1. **z.lua 脚本**: 从 [skywind3000/z.lua](https://github.com/skywind3000/z.lua) 下载 z.lua 脚本
-2. **Lua 解释器**: 需要安装 lua, luajit, 或 lua 5.1/5.2/5.3
-3. **Emacs**: 版本 24.4 或更高
+## Requirements
 
-## 安装 / Installation
+1. **z.lua Script**: Download z.lua from [skywind3000/z.lua](https://github.com/skywind3000/z.lua)
+2. **Lua Interpreter**: lua, luajit, or lua 5.1/5.2/5.3 must be installed
+3. **Emacs**: Version 24.4 or higher
 
-### 手动安装 / Manual Installation
+## Installation
 
-1. 下载 z.lua 脚本：
+### Manual Installation
+
+1. Download the z.lua script:
 
 ```bash
-# 克隆 z.lua 仓库
+# Clone the z.lua repository
 git clone https://github.com/skywind3000/z.lua.git ~/z.lua
 ```
 
-2. 下载 zlua.el 到你的 Emacs load-path：
+2. Download zlua.el to your Emacs load-path:
 
 ```bash
-# 克隆本仓库
+# Clone this repository
 git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
 ```
 
-3. 在你的 Emacs 配置文件中添加：
+3. Add to your Emacs configuration:
 
 ```elisp
 (add-to-list 'load-path "~/.emacs.d/site-lisp/zlua")
 (require 'zlua)
 
-;; 设置 z.lua 脚本的路径
+;; Set the path to z.lua script
 (setq zlua-script (expand-file-name "~/z.lua/z.lua"))
 
-;; 可选：设置 lua 可执行文件的路径（如果不在 PATH 中）
+;; Optional: Set the lua executable path (if not in PATH)
 ;; (setq zlua-executable "/usr/bin/lua")
 
-;; 启用自动跟踪模式
+;; Enable auto-tracking mode
 (zlua-mode 1)
 ```
 
-### 使用 use-package
+### Using use-package
 
 ```elisp
 (use-package zlua
@@ -64,7 +65,7 @@ git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
   (zlua-mode 1))
 ```
 
-### 使用 Straight.el
+### Using Straight.el
 
 ```elisp
 (use-package zlua
@@ -75,60 +76,64 @@ git clone https://github.com/Kinneyzhang/zlua.git ~/.emacs.d/site-lisp/zlua
   (zlua-mode 1))
 ```
 
-## 使用方法 / Usage
+## Usage
 
-### 基本命令 / Basic Commands
+### Basic Commands
 
-#### `zlua-jump` (别名: `zlua`, `z`)
+#### `zlua-jump` (alias: `zlua`, `z`)
 
-跳转到匹配的目录：
+Jump to a matching directory:
 
 ```elisp
-M-x zlua-jump RET foo RET          ; 跳转到匹配 foo 的最常用目录
-M-x z RET foo bar RET              ; 跳转到同时匹配 foo 和 bar 的目录
+M-x zlua-jump RET foo RET          ; Jump to the most frequently used directory matching "foo"
+M-x z RET foo bar RET              ; Jump to directory matching both "foo" and "bar"
 ```
 
 #### `zlua-jump-interactive`
 
-使用交互式选择跳转：
+Jump with interactive selection:
 
 ```elisp
-M-x zlua-jump-interactive RET foo RET  ; 显示所有匹配项并选择
-C-u M-x zlua-jump RET foo RET          ; 与 prefix argument 效果相同
+M-x zlua-jump-interactive RET foo RET  ; Show all matches and select
+C-u M-x zlua-jump RET foo RET          ; Same effect with prefix argument
 ```
 
 #### `zlua-list`
 
-列出所有匹配的目录及其分数：
+List all matching directories with their scores:
 
 ```elisp
-M-x zlua-list RET foo RET          ; 在新 buffer 中显示匹配结果
+M-x zlua-list RET foo RET          ; Display matches in a new buffer
 ```
 
 #### `zlua-find-file`
 
-在匹配的目录中查找并打开文件：
+Find and open a file in a matching directory:
 
 ```elisp
-M-x zlua-find-file RET foo RET     ; 跳转到匹配 foo 的目录并打开文件选择
+M-x zlua-find-file RET foo RET     ; Jump to directory matching "foo" and open file selection
 ```
 
 #### `zlua-find-file-by-name`
 
-根据文件名在所有跟踪的目录中搜索并打开文件：
-
 Search and open files by name across all tracked directories:
 
 ```elisp
-M-x zlua-find-file-by-name RET readme RET    ; 查找所有包含 'readme' 的文件
-M-x zlua-find-file-by-name RET .txt RET      ; 查找所有 .txt 文件
+M-x zlua-find-file-by-name RET readme RET    ; Find all files containing 'readme'
+M-x zlua-find-file-by-name RET .txt RET      ; Find all .txt files
 ```
-
-如果找到多个匹配的文件，会显示选择列表（包含文件名和所在目录）。
 
 If multiple matches are found, an interactive selection list will be displayed (showing filename and directory).
 
-### 键绑定建议 / Suggested Keybindings
+#### `zlua-clear-cache`
+
+Clear the directory cache to force refresh of the tracked directories list:
+
+```elisp
+M-x zlua-clear-cache RET           ; Clear cache
+```
+
+### Suggested Keybindings
 
 ```elisp
 (global-set-key (kbd "C-c z") 'zlua-jump)
@@ -137,11 +142,11 @@ If multiple matches are found, an interactive selection list will be displayed (
 (global-set-key (kbd "C-c f n") 'zlua-find-file-by-name)
 ```
 
-## 配置选项 / Configuration Options
+## Configuration Options
 
 ### `zlua-script`
 
-z.lua 脚本的绝对路径（必须设置）。
+Absolute path to z.lua script (required).
 
 ```elisp
 (setq zlua-script (expand-file-name "~/z.lua/z.lua"))
@@ -149,7 +154,7 @@ z.lua 脚本的绝对路径（必须设置）。
 
 ### `zlua-executable`
 
-Lua 可执行文件的路径。如果为 nil，会自动在 PATH 中查找。
+Path to Lua executable. If nil, will automatically search in PATH.
 
 ```elisp
 (setq zlua-executable "/usr/local/bin/lua")
@@ -157,94 +162,105 @@ Lua 可执行文件的路径。如果为 nil，会自动在 PATH 中查找。
 
 ### `zlua-enable-auto-track`
 
-是否在 dired-mode 中自动跟踪目录访问。默认为 `t`。
+Whether to automatically track directory visits in dired-mode. Default is `t`.
 
 ```elisp
-(setq zlua-enable-auto-track t)  ; 启用自动跟踪
+(setq zlua-enable-auto-track t)  ; Enable auto-tracking
 ```
 
-## 工作原理 / How It Works
+### `zlua-cache-timeout`
 
-1. **目录跟踪**: 当 `zlua-mode` 启用时，每次在 dired 中访问目录时，该目录会被添加到 z.lua 数据库中。
+Directory cache expiration time in seconds. Default is 60 seconds. Set to 0 to disable caching.
 
-2. **智能匹配**: z.lua 使用 "frecent" 算法（结合频率和最近访问时间）来排序匹配的目录。
+```elisp
+(setq zlua-cache-timeout 60)     ; Cache for 60 seconds
+(setq zlua-cache-timeout 0)      ; Disable caching
+```
 
-3. **模糊搜索**: 支持正则表达式和多关键词匹配，例如 "foo bar" 可以匹配 `/foo/something/bar`。
+## How It Works
 
-## 与 Shell 集成 / Shell Integration
+1. **Directory Tracking**: When `zlua-mode` is enabled, each directory visited in dired will be added to the z.lua database.
 
-如果你也在 shell 中使用 z.lua，Emacs 集成会与 shell 共享同一个数据库（默认为 `~/.zlua`），这意味着：
+2. **Smart Matching**: z.lua uses a "frecent" algorithm (combining frequency and recency) to sort matching directories.
 
-- 在 shell 中访问的目录也会在 Emacs 中可用
-- 在 Emacs 中访问的目录也会在 shell 中可用
-- 两者的历史记录会互相增强
+3. **Fuzzy Search**: Supports regex and multi-keyword matching, e.g., "foo bar" can match `/foo/something/bar`.
 
-在 bash/zsh 中安装 z.lua：
+4. **Caching Mechanism**: For better performance, `zlua-search-file` uses caching to store the tracked directories list, avoiding z.lua queries on each call.
+
+## Shell Integration
+
+If you also use z.lua in your shell, the Emacs integration shares the same database (default `~/.zlua`), meaning:
+
+- Directories visited in shell are also available in Emacs
+- Directories visited in Emacs are also available in shell
+- History from both enhances each other
+
+Installing z.lua in bash/zsh:
 
 ```bash
-# 在 .bashrc 或 .zshrc 中添加
-eval "$(lua ~/z.lua/z.lua --init bash)"   # 对于 bash
-eval "$(lua ~/z.lua/z.lua --init zsh)"    # 对于 zsh
+# Add to .bashrc or .zshrc
+eval "$(lua ~/z.lua/z.lua --init bash)"   # For bash
+eval "$(lua ~/z.lua/z.lua --init zsh)"    # For zsh
 ```
 
-## 故障排除 / Troubleshooting
+## Troubleshooting
 
 ### "lua executable not found"
 
-确保 lua 已安装并在 PATH 中，或者设置 `zlua-executable`：
+Ensure lua is installed and in PATH, or set `zlua-executable`:
 
 ```bash
-# 检查 lua 是否可用
+# Check if lua is available
 which lua
 ```
 
 ### "z.lua script not found"
 
-确保 `zlua-script` 指向正确的 z.lua 脚本路径：
+Ensure `zlua-script` points to the correct z.lua script path:
 
 ```elisp
 (setq zlua-script (expand-file-name "~/z.lua/z.lua"))
 ```
 
-### 没有匹配结果
+### No matching results
 
-z.lua 需要一段时间来学习你的习惯。在使用一段时间后，你访问过的目录会被记录并可以跳转。
+z.lua needs time to learn your habits. After using it for a while, your visited directories will be recorded and available for jumping.
 
-## 示例工作流 / Example Workflow
+## Example Workflow
 
 ```elisp
-;; 1. 启用 zlua-mode 后，正常使用 dired 浏览目录
+;; 1. After enabling zlua-mode, use dired normally to browse directories
 M-x dired RET ~/projects/my-project RET
 M-x dired RET ~/documents/work RET
 M-x dired RET ~/downloads RET
 
-;; 2. 之后可以快速跳转到这些目录
-M-x z RET proj RET                    ; 跳转到 ~/projects/my-project
-M-x z RET work RET                    ; 跳转到 ~/documents/work
-M-x z RET down RET                    ; 跳转到 ~/downloads
+;; 2. Later you can quickly jump to these directories
+M-x z RET proj RET                    ; Jump to ~/projects/my-project
+M-x z RET work RET                    ; Jump to ~/documents/work
+M-x z RET down RET                    ; Jump to ~/downloads
 
-;; 3. 多个匹配时使用交互式选择
-M-x zlua-jump-interactive RET doc RET ; 显示所有包含 "doc" 的目录
+;; 3. Use interactive selection when multiple matches exist
+M-x zlua-jump-interactive RET doc RET ; Show all directories containing "doc"
 
-;; 4. 在匹配的目录中打开文件
-M-x zlua-find-file RET proj RET       ; 在 ~/projects/my-project 中选择文件
+;; 4. Open files in matching directories
+M-x zlua-find-file RET proj RET       ; Select file in ~/projects/my-project
 
-;; 5. 根据文件名直接搜索并打开文件
-M-x zlua-find-file-by-name RET config RET  ; 在所有跟踪目录中查找包含 "config" 的文件
-M-x zlua-find-file-by-name RET .el RET     ; 查找所有 .el 文件
+;; 5. Search and open files by name directly
+M-x zlua-find-file-by-name RET config RET  ; Find files containing "config" in all tracked directories
+M-x zlua-find-file-by-name RET .el RET     ; Find all .el files
 ```
 
-## 相关项目 / Related Projects
+## Related Projects
 
-- [z.lua](https://github.com/skywind3000/z.lua) - 原始的 z.lua 项目
-- [z.sh](https://github.com/rupa/z) - 原始的 z shell 脚本
-- [autojump](https://github.com/wting/autojump) - 另一个目录跳转工具
-- [fasd](https://github.com/clvv/fasd) - 快速访问文件和目录
+- [z.lua](https://github.com/skywind3000/z.lua) - Original z.lua project
+- [z.sh](https://github.com/rupa/z) - Original z shell script
+- [autojump](https://github.com/wting/autojump) - Another directory jumping tool
+- [fasd](https://github.com/clvv/fasd) - Quick access to files and directories
 
-## 许可证 / License
+## License
 
-MIT License - 详见 LICENSE 文件。
+MIT License - See LICENSE file for details.
 
-## 致谢 / Acknowledgments
+## Acknowledgments
 
-感谢 [skywind3000](https://github.com/skywind3000) 创建了优秀的 z.lua 工具。
+Thanks to [skywind3000](https://github.com/skywind3000) for creating the excellent z.lua tool.

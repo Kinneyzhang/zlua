@@ -61,6 +61,18 @@ When non-nil, visiting directories in dired will update z.lua database."
 (defvar zlua--lua-executable nil
   "Cached path to lua executable.")
 
+(defvar zlua--dirs-cache nil
+  "Cached list of tracked directories.")
+
+(defvar zlua--dirs-cache-time nil
+  "Time when the directories cache was last updated.")
+
+(defcustom zlua-cache-timeout 60
+  "Number of seconds before the directories cache expires.
+Set to 0 to disable caching."
+  :type 'integer
+  :group 'zlua)
+
 (defun zlua--find-lua-executable ()
   "Find lua executable in PATH."
   (or zlua--lua-executable
@@ -120,6 +132,37 @@ Otherwise return the best match."
       (if list-all
           (split-string output "\n" t)
         output))))
+
+(defun zlua--cache-expired-p ()
+  "Return t if the directories cache has expired."
+  (or (null zlua--dirs-cache-time)
+      (null zlua--dirs-cache)
+      (zerop zlua-cache-timeout)
+      (> (float-time (time-subtract (current-time) zlua--dirs-cache-time))
+         zlua-cache-timeout)))
+
+(defun zlua--get-all-dirs ()
+  "Get all tracked directories, using cache when available.
+Returns a list of directory paths extracted from the z.lua output."
+  (when (zlua--cache-expired-p)
+    (let* ((all-dirs (zlua--get-matches "." t))
+           (paths nil))
+      (dolist (line all-dirs)
+        (when (string-match "^[0-9.,]+\\s-+\\(.+\\)$" line)
+          (let ((dir (match-string 1 line)))
+            (when (file-directory-p dir)
+              (push dir paths)))))
+      (setq zlua--dirs-cache (nreverse paths))
+      (setq zlua--dirs-cache-time (current-time))))
+  zlua--dirs-cache)
+
+(defun zlua-clear-cache ()
+  "Clear the directories cache.
+Call this if you want to force a refresh of the tracked directories list."
+  (interactive)
+  (setq zlua--dirs-cache nil)
+  (setq zlua--dirs-cache-time nil)
+  (message "zlua: cache cleared"))
 
 ;;;###autoload
 (defun zlua-jump (pattern &optional interactive-select)
@@ -191,26 +234,23 @@ Shows a list of all matching directories and allows selection."
   "Find and open a file by FILENAME-PATTERN in z.lua tracked directories.
 Searches for files matching FILENAME-PATTERN across all directories
 in the z.lua database and allows selection if multiple matches are found.
-FILENAME-PATTERN is matched as a substring in the filename."
+FILENAME-PATTERN is matched as a substring in the filename.
+Uses cached directory list for better performance."
   (interactive "szlua search file: ")
-  (let* ((all-dirs (zlua--get-matches "." t))  ; Get all tracked directories
+  (let* ((all-dirs (zlua--get-all-dirs))  ; Use cached directories
          (matching-files nil))
     (if (not all-dirs)
         (message "zlua: no tracked directories found")
-      ;; Extract directory paths from "score path" format
-      (dolist (line all-dirs)
-        (when (string-match "^[0-9.,]+\\s-+\\(.+\\)$" line)
-          (let ((dir (match-string 1 line)))
-            (when (file-directory-p dir)
-              ;; Search for matching files in this directory
-              (condition-case nil
-                  (let ((files (directory-files dir t)))
-                    (dolist (file files)
-                      (when (and (file-regular-p file)
-                                 (string-match-p (regexp-quote filename-pattern)
-                                                 (file-name-nondirectory file)))
-                        (push file matching-files))))
-                (error nil))))))  ; Ignore errors from inaccessible directories
+      ;; Search for matching files in each directory
+      (dolist (dir all-dirs)
+        (condition-case nil
+            (let ((files (directory-files dir t)))
+              (dolist (file files)
+                (when (and (file-regular-p file)
+                           (string-match-p (regexp-quote filename-pattern)
+                                           (file-name-nondirectory file)))
+                  (push file matching-files))))
+          (error nil)))  ; Ignore errors from inaccessible directories
       
       (cond
        ((null matching-files)
