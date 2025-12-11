@@ -117,15 +117,6 @@ M-x zlua-search-file RET .txt RET      ; 查找所有 .txt 文件
 M-x zlua-clear-cache RET           ; 清除缓存
 ```
 
-### 键绑定建议
-
-```elisp
-(global-set-key (kbd "C-c z") 'zlua-jump)
-(global-set-key (kbd "C-c Z") 'zlua-jump-interactive)
-(global-set-key (kbd "C-c f z") 'zlua-search-dir)
-(global-set-key (kbd "C-c f n") 'zlua-search-file)
-```
-
 ## 配置选项
 
 ### `zlua-executable`
