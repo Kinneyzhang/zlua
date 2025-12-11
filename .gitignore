@@ -1,0 +1,14 @@
+# Emacs byte-compiled files
+*.elc
+
+# Backup and auto-save files
+*~
+\#*\#
+.\#*
+
+# Package files
+*.tar
+*.tar.gz
+
+# Directory local variables
+.dir-locals.el
